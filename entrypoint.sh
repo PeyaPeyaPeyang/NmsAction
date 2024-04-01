@@ -11,16 +11,17 @@ download_build_tools() {
 
 # Function to install dependencies
 build_one_nms() {
+    cpu_arch_type=$(lscpu | grep Architecture | awk {'print $2'})
     version=$1
     # Determine Java version based on provided Minecraft version
     case $version in
         1.17 | 1.16* | 1.15* | 1.14* | 1.13* | 1.12* | 1.11* | 1.10* | 1.9* | 1.8*)
             echo "Using java8"
-            export JAVA_HOME=/usr/lib/jvm/java-8-openjdk
+            export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-$cpu_arch_type
             ;;
         *)
             echo "Using java17"
-            export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+            export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-$cpu_arch_type
             ;;
     esac
 
