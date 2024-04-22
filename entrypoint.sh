@@ -9,9 +9,32 @@ download_build_tools() {
     fi
 }
 
+ get_arch() {
+     jvm_dir="/usr/lib/jvm/"
+
+     # パターンに一致するファイルが存在するかチェック
+     files=$(ls -d "$jvm_dir"java-[0-9]*-openjdk-* 2>/dev/null)
+     if [ -z "$files" ]; then
+         echo "No OpenJDK installation found in $jvm_dir" >&2
+         return 1
+     fi
+
+     # パターンに一致するファイル名を取得し、パターンに一致する部分を抽出して出力
+     for file in $files; do
+         if echo "$file" | grep -qE "java-[0-9]+-openjdk-[^-]+$"; then
+             arch=$(basename "$file" | sed -E "s/.*java-[0-9]+-openjdk-([^-]+)$/\1/")
+             echo "$arch"
+             return 0
+         fi
+     done
+
+     return 1
+ }
+
+
 # Function to install dependencies
 build_one_nms() {
-    cpu_arch_type=$(lscpu | grep Architecture | awk {'print $2'})
+    cpu_arch_type=$(get_arch)
     version=$1
     # Determine Java version based on provided Minecraft version
     case $version in
