@@ -7,6 +7,6 @@ inputs:
     default: '1.15.2'
 runs:
   using: 'docker'
-  image: 'Dockerfile'
+  image: 'docker://ghcr.io/peyapeyapeyang/nmsaction:latest'
   args:
     - ${{ inputs.rev }}
